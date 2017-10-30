@@ -16,8 +16,11 @@
 
 const {join} = require('path')
 const {fork} = require('child_process')
+const {promisify} = require('util')
 
-const waitForPort = require('wait-for-port')
+const vows = require('perjury')
+const {assert} = vows
+const waitForPort = promisify(require('wait-for-port'))
 
 class Server {
 
@@ -28,17 +31,9 @@ class Server {
 
   start () {
     this.child = fork(this.path, [], {env: this.env, silent: true})
-    return new Promise((resolve, reject) => {
-      const host = this.env.HOST || 'localhost'
-      const port = parseInt(this.env.PORT, 10)
-      waitForPort(host, port, (err) => {
-        if (err) {
-          reject(err)
-        } else {
-          resolve()
-        }
-      })
-    })
+    const host = this.env.TAGS_PUB_HOSTNAME || 'localhost'
+    const port = parseInt(this.env.TAGS_PUB_PORT, 10)
+    return waitForPort(host, port)
   }
 
   stop () {
@@ -55,6 +50,29 @@ class Server {
       })
       this.child.kill()
     })
+  }
+
+  static batch (env, rest) {
+    let base = {
+      'When we start the app': {
+        async topic() {
+          const server = new Server(env)
+          const child = await server.start()
+          return server
+        },
+        'it works': (err, server) => {
+          assert.ifError(err)
+          assert.isObject(server)
+        },
+        async teardown(server) {
+          assert.isObject(server)
+          return server.stop()
+        }
+      }
+    }
+    let props = Object.getOwnPropertyNames(rest)
+    base['When we start the app'][props[0]] = rest[props[0]]
+    return base
   }
 }
 

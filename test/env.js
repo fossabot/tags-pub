@@ -15,9 +15,9 @@
 //  limitations under the License.
 
 const env = {
-  HOSTNAME: 'localhost',
-  PORT: 8081,
-  URL_ROOT: 'https://tags.pub',
+  TAGS_PUB_HOSTNAME: 'localhost',
+  TAGS_PUB_PORT: '8081',
+  TAGS_PUB_URL_ROOT: 'https://tags.pub',
   DEBUG: process.env.DEBUG
 }
 
