@@ -25,7 +25,7 @@ vows.describe('app start and stop')
     'When we start the app': {
       async topic() {
         const server = new Server(env)
-        await server.start()
+        const child = await server.start()
         return server
       },
       'it works': (err, server) => {
