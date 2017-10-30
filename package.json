@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "test": "perjury test/*-test.js"
+    "test": "perjury test/*-test.js",
+    "lint": "eslint ."
   },
   "dependencies": {
     "body-parser": "~1.18.2",
@@ -19,6 +20,7 @@
   },
   "devDependencies": {
     "node-fetch": "^1.7.3",
-    "perjury": "^1.0.3"
+    "perjury": "^1.0.3",
+    "eslint": "^3.19.0"
   }
 }
