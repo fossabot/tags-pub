@@ -12,9 +12,12 @@
     "express": "~4.15.5",
     "morgan": "~1.9.0",
     "pug": "2.0.0-beta11",
-    "serve-favicon": "~2.4.5"
+    "serve-favicon": "~2.4.5",
+    "yargs": "^10.0.3"
   },
   "devDependencies": {
-    "@polymer/polymer": "^2.2.0"
+    "@polymer/polymer": "^2.2.0",
+    "node-fetch": "^1.7.3",
+    "perjury": "^1.0.3"
   }
 }
