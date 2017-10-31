@@ -1,3 +1,4 @@
+const {join} = require('path')
 const express = require('express')
 const router = express.Router()
 
@@ -5,7 +6,7 @@ const AS2 = 'https://www.w3.org/ns/activitystreams'
 
 /* GET home page. */
 router.get('/', (req, res, next) => {
-  res.render('index', { title: 'Express' })
+  res.sendFile(join(__dirname, '..', 'public', 'index.html'))
 })
 
 /* GET tag */
