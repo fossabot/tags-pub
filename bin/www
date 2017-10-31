@@ -23,13 +23,12 @@ const { argv } = require('yargs')
   .env('TAGS_PUB')
   .help('h')
   .alias('h', 'help')
-  const app = require('../app')(argv)
+
+const app = require('../app')(argv)
 
 if (!argv.root) {
   argv.r = argv.root = `http://${argv.hostname}:${argv.port}`
 }
-
-debug(argv)
 
 /**
  * Get port from environment and store in Express.
@@ -60,18 +59,16 @@ function onError (error) {
     throw error
   }
 
-  const bind = `Port ${port}`
+  const bind = `Port ${argv.port}`
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
     case 'EACCES':
       console.error(`${bind} requires elevated privileges`)
       process.exit(1)
-      break
     case 'EADDRINUSE':
       console.error(`${bind} is already in use`)
       process.exit(1)
-      break
     default:
       throw error
   }
