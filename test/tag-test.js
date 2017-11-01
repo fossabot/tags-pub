@@ -28,7 +28,7 @@ const HEADERS = {'Accept': ACCEPT}
 vows.describe('/tag/:tag endpoint')
   .addBatch(Server.batch(env, {
     'and we fetch a tag': {
-      async topic() {
+      async topic () {
         const url = `http://${env.TAGS_PUB_HOSTNAME}:${env.TAGS_PUB_PORT}/tag/foo`
         const res = await fetch(url, {'headers': HEADERS})
         return res.json()
