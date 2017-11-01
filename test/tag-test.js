@@ -28,22 +28,31 @@ const HEADERS = {'Accept': ACCEPT}
 vows.describe('/tag/:tag endpoint')
   .addBatch(Server.batch(env, {
     'and we fetch a tag': {
-      async topic () {
+      topic () {
         const url = `http://${env.TAGS_PUB_HOSTNAME}:${env.TAGS_PUB_PORT}/tag/foo`
-        const res = await fetch(url, {'headers': HEADERS})
-        return res.json()
+        return fetch(url, {'headers': HEADERS})
       },
-      'it works': (err, json) => {
+      'it works': (err, res) => {
         assert.ifError(err)
-        assert.isObject(json)
-        assert.isString(json['@context'])
-        assert.equal(json['@context'], AS2)
-        assert.isString(json.type)
-        assert.equal(json.type, 'Hashtag')
-        assert.isString(json.id)
-        assert.equal(json.id, `${env.TAGS_PUB_URL_ROOT}/tag/foo`)
-        assert.isString(json.name)
-        assert.equal(json.name, '#foo')
+        assert.isObject(res)
+        assert.equal(res.status, 200)
+      },
+      'and we get its JSON contents': {
+        topic (res) {
+          return res.json()
+        },
+        'it works': (err, json) => {
+          assert.ifError(err)
+          assert.isObject(json)
+          assert.isString(json['@context'])
+          assert.equal(json['@context'], AS2)
+          assert.isString(json.type)
+          assert.equal(json.type, 'Hashtag')
+          assert.isString(json.id)
+          assert.equal(json.id, `${env.TAGS_PUB_URL_ROOT}/tag/foo`)
+          assert.isString(json.name)
+          assert.equal(json.name, '#foo')
+        }
       }
     }
   }))
