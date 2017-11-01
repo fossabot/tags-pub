@@ -1,7 +1,6 @@
 const {join} = require('path')
 const express = require('express')
 const router = express.Router()
-const debug = require('debug')('tags-pub:index')
 
 const AS2 = 'https://www.w3.org/ns/activitystreams'
 

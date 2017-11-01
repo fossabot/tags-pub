@@ -23,7 +23,6 @@ const {assert} = vows
 const waitForPort = promisify(require('wait-for-port'))
 
 class Server {
-
   constructor (env) {
     this.env = env
     this.path = join(__dirname, '..', 'bin', 'www')
@@ -53,24 +52,24 @@ class Server {
   }
 
   static batch (env, rest) {
-    let base = {
+    const base = {
       'When we start the app': {
-        async topic() {
+        async topic () {
           const server = new Server(env)
-          const child = await server.start()
+          await server.start()
           return server
         },
         'it works': (err, server) => {
           assert.ifError(err)
           assert.isObject(server)
         },
-        async teardown(server) {
+        async teardown (server) {
           assert.isObject(server)
           return server.stop()
         }
       }
     }
-    let props = Object.getOwnPropertyNames(rest)
+    const props = Object.getOwnPropertyNames(rest)
     base['When we start the app'][props[0]] = rest[props[0]]
     return base
   }
