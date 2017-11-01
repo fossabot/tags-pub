@@ -72,6 +72,23 @@ vows.describe('/tag/:tag endpoint')
           assert.equal(res.status, 200)
           assert.ok(res.headers.has('Content-Type'))
           assert.equal(res.headers.get('Content-Type'), 'application/ld+json; profile="https://www.w3.org/ns/activitystreams"')
+        },
+        'and we get its JSON contents': {
+          topic (res) {
+            return res.json()
+          },
+          'it works': (err, json) => {
+            assert.ifError(err)
+            assert.isObject(json)
+            assert.isString(json['@context'])
+            assert.equal(json['@context'], AS2)
+            assert.isString(json.type)
+            assert.equal(json.type, 'Hashtag')
+            assert.isString(json.id)
+            assert.equal(json.id, `${env.TAGS_PUB_URL_ROOT}/tag/foo`)
+            assert.isString(json.name)
+            assert.equal(json.name, '#foo')
+          }
         }
       },
       'and we fetch a tag with application/json': {
@@ -85,6 +102,23 @@ vows.describe('/tag/:tag endpoint')
           assert.equal(res.status, 200)
           assert.ok(res.headers.has('Content-Type'))
           assert.equal(res.headers.get('Content-Type'), 'application/json; charset=utf-8')
+        },
+        'and we get its JSON contents': {
+          topic (res) {
+            return res.json()
+          },
+          'it works': (err, json) => {
+            assert.ifError(err)
+            assert.isObject(json)
+            assert.isString(json['@context'])
+            assert.equal(json['@context'], AS2)
+            assert.isString(json.type)
+            assert.equal(json.type, 'Hashtag')
+            assert.isString(json.id)
+            assert.equal(json.id, `${env.TAGS_PUB_URL_ROOT}/tag/foo`)
+            assert.isString(json.name)
+            assert.equal(json.name, '#foo')
+          }
         }
       }
     }
