@@ -16,6 +16,8 @@ module.exports = (argv) => {
     return `${this.argv.root}${rel}`
   }
 
+  app.disable('x-powered-by')
+
   app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.ico')))
   app.use(logger('dev'))
   app.use(bodyParser.json())
