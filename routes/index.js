@@ -1,6 +1,7 @@
 const {join} = require('path')
 const express = require('express')
 const router = express.Router()
+const debug = require('debug')('tags-pub:index')
 
 const AS2 = 'https://www.w3.org/ns/activitystreams'
 
@@ -12,12 +13,23 @@ router.get('/', (req, res, next) => {
 /* GET tag */
 router.get('/tag/:tag', (req, res, next) => {
   const {tag} = req.params
-  res.json({
+  const body = JSON.stringify({
     '@context': AS2,
     type: 'Hashtag',
     id: req.app.makeURL(`/tag/${tag}`),
     name: `#${tag}`
   })
+  if (req.accepts('application/activity+json')) {
+    res.type('application/activity+json')
+    res.send(Buffer.from(body, 'utf8'))
+  } else if (req.accepts('application/ld+json')) {
+    res.type('application/ld+json; profile="https://www.w3.org/ns/activitystreams"')
+    res.send(Buffer.from(body, 'utf8'))
+  } else if (req.accepts('application/json')) {
+    res.json(body)
+  } else {
+    res.sendStatus(406)
+  }
 })
 
 module.exports = router

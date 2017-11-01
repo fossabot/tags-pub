@@ -27,7 +27,7 @@ const HEADERS = {'Accept': ACCEPT}
 
 vows.describe('/tag/:tag endpoint')
   .addBatch(Server.batch(env, {
-    'and we fetch a tag': {
+    'and we fetch a tag with default accepts': {
       topic () {
         const url = `http://${env.TAGS_PUB_HOSTNAME}:${env.TAGS_PUB_PORT}/tag/foo`
         return fetch(url, {'headers': HEADERS})
@@ -36,6 +36,13 @@ vows.describe('/tag/:tag endpoint')
         assert.ifError(err)
         assert.isObject(res)
         assert.equal(res.status, 200)
+      },
+      'it has the right MIME type': (err, res) => {
+        assert.ifError(err)
+        assert.isObject(res)
+        assert.equal(res.status, 200)
+        assert.ok(res.headers.has('Content-Type'))
+        assert.equal(res.headers.get('Content-Type'), 'application/activity+json')
       },
       'and we get its JSON contents': {
         topic (res) {
@@ -52,6 +59,32 @@ vows.describe('/tag/:tag endpoint')
           assert.equal(json.id, `${env.TAGS_PUB_URL_ROOT}/tag/foo`)
           assert.isString(json.name)
           assert.equal(json.name, '#foo')
+        }
+      },
+      'and we fetch a tag with application/ld+json': {
+        topic () {
+          const url = `http://${env.TAGS_PUB_HOSTNAME}:${env.TAGS_PUB_PORT}/tag/foo`
+          return fetch(url, {'headers': {'Accept': 'application/ld+json'}})
+        },
+        'it has the right MIME type': (err, res) => {
+          assert.ifError(err)
+          assert.isObject(res)
+          assert.equal(res.status, 200)
+          assert.ok(res.headers.has('Content-Type'))
+          assert.equal(res.headers.get('Content-Type'), 'application/ld+json; profile="https://www.w3.org/ns/activitystreams"')
+        }
+      },
+      'and we fetch a tag with application/json': {
+        topic () {
+          const url = `http://${env.TAGS_PUB_HOSTNAME}:${env.TAGS_PUB_PORT}/tag/foo`
+          return fetch(url, {'headers': {'Accept': 'application/json'}})
+        },
+        'it has the right MIME type': (err, res) => {
+          assert.ifError(err)
+          assert.isObject(res)
+          assert.equal(res.status, 200)
+          assert.ok(res.headers.has('Content-Type'))
+          assert.equal(res.headers.get('Content-Type'), 'application/json; charset=utf-8')
         }
       }
     }
